@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Запрошення на побачення 💌</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fbc7c7 0%, #f0a6a6 100%);
+      min-height: 100vh;
+    }
+
+    .btn-animate {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-animate::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background: rgba(255,255,255,0.15);
+      transform: translate(-50%, -50%) scale(0);
+      border-radius: 50%;
+      transition: transform 0.5s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .btn-animate:hover::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .btn-animate:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(219,39,119,0.4);
+      z-index: 1;
+    }
+
+    .btn-animate:active {
+      transform: scale(0.95);
+      box-shadow: 0 4px 10px rgba(219,39,119,0.2);
+      transition: transform 0.1s ease;
+    }
+
+    h1 {
+      transition: color 0.3s ease;
+    }
+
+    h1:hover {
+      color: #db2777;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      p.question {
+        font-size: 1.125rem;
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center px-4">
+  <div class="container bg-white shadow-2xl rounded-3xl p-10 max-w-md w-full text-center">
+    
+    <h1 class="text-4xl font-extrabold text-rose-500 mb-6 select-none">Запрошення на побачення 💌</h1>
+
+    <div class="text-left text-gray-700 mb-8 space-y-2 text-sm md:text-base">
+      <p><strong>📍 Місце:</strong> Мигія</p>
+      <p><strong>📅 Дата:</strong> 30.07.2025</p>
+      <p><strong>👗 Дрес-код:</strong> Вільний вибір, щось комфортне</p>
+    </div>
+    
+    <h2 class="text-xl font-semibold text-rose-400 mb-2 text-left">Що тебе очікує:</h2>
+    <ul class="text-gray-700 text-sm md:text-base mb-6 list-none p-0 text-left space-y-1">
+      <li>Перегляд фільму</li>
+      <li>Смачна кава</li>
+      <li>Безлімітні обійми</li>
+    </ul> 
+
+
+    <!-- Блок з вибором часу -->
+    <div class="mb-6">
+      <p class="text-lg font-medium text-gray-800 mb-3 select-none">Обери зручний для себе час:</p>
+      <div class="flex justify-center space-x-4 flex-wrap">
+        <button type="button" onclick="selectTime('18:00')" class="btn-animate bg-rose-300 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded-full">18:00</button>
+        <button type="button" onclick="selectTime('19:00')" class="btn-animate bg-rose-300 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded-full">19:00</button>
+      </div>
+    </div>
+
+    <!-- Питання -->
+    <p class="question text-xl font-semibold text-pink-600 mb-6 select-none">Залишилась формальність) Чи згодна ти піти на побачення? 💖</p>
+
+    <!-- Повідомлення після "Так" -->
+    <div id="yesMessage" class="text-left text-pink-700 text-sm md:text-base bg-pink-100 p-4 rounded-xl mb-6 hidden">
+      <p><strong>Для покращення цього вечора від тебе буде потрібно:</strong></p>
+      <ul class="list-disc list-inside mb-2">
+        <li>Гарний настрій та усмішка 😊</li>
+      </ul>
+      <p>До зустрічі о <span id="chosenTime">___</span></p>
+      <p>Люблю ❤️</p>
+    </div>
+
+    <!-- Форма -->
+    <form action="https://formsubmit.co/bashtest497@gmail.com" method="POST" id="dateForm">
+      <input type="hidden" name="answer" id="selectedAnswer" required />
+      <input type="hidden" name="time" id="selectedTime" required />
+
+      <div class="flex justify-center space-x-6 mb-10 flex-wrap">
+        <button type="button" onclick="selectAnswer('Так 💖')" class="btn-animate bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg">
+          Так 💖
+        </button>
+        <button type="button" onclick="selectAnswer('Ні 🙁')" class="btn-animate bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-3 px-8 rounded-full shadow-lg">
+          Ні 🙁
+        </button>
+      </div>
+
+      <button type="submit" id="submitButton" class="btn-animate bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-12 rounded-full shadow-xl uppercase tracking-wide hidden">
+        Відправити
+      </button>
+    </form>
+  </div>
+
+  <script>
+    let selectedTimeValue = "";
+
+    function selectTime(time) {
+      selectedTimeValue = time;
+      document.getElementById('selectedTime').value = time;
+      document.querySelectorAll('button').forEach(btn => {
+        if (btn.innerText === "18:00" || btn.innerText === "19:00") {
+          btn.classList.remove('ring', 'ring-4', 'ring-pink-400', 'ring-opacity-50');
+        }
+      });
+      event.target.classList.add('ring', 'ring-4', 'ring-pink-400', 'ring-opacity-50');
+    }
+
+    function selectAnswer(answer) {
+      document.getElementById('selectedAnswer').value = answer;
+
+      // Виділення кнопки
+      document.querySelectorAll('form button[type="button"]').forEach(btn => {
+        btn.classList.remove('ring', 'ring-4', 'ring-pink-400', 'ring-opacity-50');
+      });
+      event.target.classList.add('ring', 'ring-4', 'ring-pink-400', 'ring-opacity-50');
+
+      // Показати кнопку "Відправити" лише якщо вибрано і відповідь, і час
+      if (selectedTimeValue !== "") {
+        document.getElementById('submitButton').classList.remove('hidden');
+      }
+
+      // Показати повідомлення, якщо відповідь "Так"
+      if (answer === 'Так 💖') {
+        const msgBlock = document.getElementById('yesMessage');
+        msgBlock.classList.remove('hidden');
+        document.getElementById('chosenTime').innerText = selectedTimeValue || '___';
+      } else {
+        document.getElementById('yesMessage').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
